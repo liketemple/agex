@@ -33,4 +33,14 @@ defmodule Agex do
 
 end
 
-Postgrex.Types.define(Agex.PostgresTypes, [Age.Extension.Vertex, Age.Extension.Edge, Age.Extension.Path], [])
+Postgrex.Types.define(Agex.PostgresTypes, [
+  Agex.Extension.GraphId, 
+  Agex.Extension.Vertex, 
+  Agex.Extension.Edge, 
+  Agex.Extension.Path], [])
+
+  # Agex.start
+  # Agex.set_graph
+  # Agex.query("MATCH (p:movie) return p;")
+  # Agex.query("MATCH (:person {name: 'Tom'})-[r:knows]->(:person {name: 'Summer'}) return r;")
+  # Agex.query("MATCH p=(:person {name: 'Tom'})-[:knows]->(:person) RETURN p;")

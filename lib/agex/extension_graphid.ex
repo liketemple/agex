@@ -1,7 +1,6 @@
-defmodule Agex.Extension.Vertex do
+defmodule Agex.Extension.GraphId do
   @behaviour Postgrex.Extension
   import Postgrex.BinaryUtils, warn: false
-  alias Agex.Extension.GraphId
   # alias Agex.Util
   require Logger
 
@@ -14,7 +13,7 @@ defmodule Agex.Extension.Vertex do
   end
 
   def matching(_) do
-    [output: "vertex_out"]
+    [output: "graphid_out"]
   end
 
   def format(_) do
@@ -27,7 +26,7 @@ defmodule Agex.Extension.Vertex do
         data = unquote(__MODULE__).encode_elixir(vertex)
         [<<IO.iodata_length(data)::int32>> | data]
       other ->
-        raise DBConnection.EncodeError, Postgrex.Utils.encode_msg(other, Agex.Vertex)
+        raise DBConnection.EncodeError, Postgrex.Utils.encode_msg(other, Agex.GrpahId)
     end
   end
 
@@ -45,27 +44,20 @@ defmodule Agex.Extension.Vertex do
     end
   end
 
-  def encode_elixir(%Agex.Vertex{gid: gid, label: label, props: props}) do
-    str = label <> "[" <> GraphId.encode_elixir(gid) <> "]" <> Jason.encode!(props)
-    Logger.debug("encode vertex: #{inspect(str)}")
+  def encode_elixir(%Agex.GraphId{lab_id: lab_id, loc_id: loc_id}) do
+    str = to_string(lab_id) <> "." <> to_string(loc_id)
+    Logger.debug("encode graphid: #{inspect(str)}")
     str |> IO.iodata_to_binary
   end
 
   def decode_elixir(data) do
     # Logger.debug("data: #{inspect(data)}")
-    {:ok, re} = :re.compile("(.+?)\\[(.+?)\\](.*)")
-    case :re.split(data, re)
-      |> Enum.reject(fn x -> x=="" end) do
-        [label, gid, props] ->
-          # vertex
-          %Agex.Vertex{
-            label: label, 
-            gid: GraphId.decode_elixir(gid), 
-            props: Jason.decode!(props)}
-
-        _ ->
-          nil
-      end
+    case String.split(data, ".") do
+      [lab_id, loc_id] ->
+        %Agex.GraphId{lab_id: lab_id, loc_id: loc_id}
+      _ ->
+        nil
+    end
   end
 
 end
