@@ -14,7 +14,7 @@ defmodule Agex.Extension.Vertex do
   end
 
   def matching(_) do
-    [output: "vertex_out"]
+    [output: "vertex_out", type: "vertex"]
   end
 
   def format(_) do

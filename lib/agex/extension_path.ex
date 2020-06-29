@@ -13,7 +13,7 @@ defmodule Agex.Extension.Path do
   end
 
   def matching(_) do
-    [output: "graphpath_out"]
+    [output: "graphpath_out", type: "graphpath"]
   end
 
   def format(_) do

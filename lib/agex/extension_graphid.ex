@@ -13,7 +13,7 @@ defmodule Agex.Extension.GraphId do
   end
 
   def matching(_) do
-    [output: "graphid_out"]
+    [output: "graphid_out", type: "graphid"]
   end
 
   def format(_) do

@@ -13,7 +13,7 @@ defmodule Agex.Extension.Edge do
   end
 
   def matching(_) do
-    [output: "edge_out"]
+    [output: "edge_out", type: "edge"]
   end
 
   def format(_) do

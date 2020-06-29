@@ -30,6 +30,19 @@ defmodule Agex do
     query("set graph_path=#{graph};")
   end
 
+  def test() do
+    Agex.start
+    Agex.query("LOAD 'age';")
+    q = """
+    SET search_path = ag_catalog, "$user", public;
+    """
+    Agex.query(q)
+    Agex.set_graph
+    Agex.query("MATCH (p:movie) return p;")
+    Agex.query("MATCH (:person {name: 'Tom'})-[r:knows]->(:person {name: 'Summer'}) return r;")
+    Agex.query("MATCH p=(:person {name: 'Tom'})-[:knows]->(:person) RETURN p;")
+  end
+
 
 end
 
