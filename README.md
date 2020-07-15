@@ -22,7 +22,7 @@ be found at [https://hexdocs.pm/agex](https://hexdocs.pm/agex).
 
 ## Examples
 
-```
+```elixir
 # Create a new Postgrex Types module
 Postgrex.Types.define(MyApp.PostgresTypes, [
   Agex.Extension.GraphId, 
