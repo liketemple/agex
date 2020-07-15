@@ -1,6 +1,5 @@
 # Agex
 
-**TODO: Add description**
 Postgrex extension for the AgensGraph and AGE data types.
 
 ## Installation
