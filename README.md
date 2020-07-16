@@ -40,11 +40,11 @@ env = Application.get_env(:agex, :agensdb)
     database: env[:db],
     types: Agex.PostgresTypes
   )
-
+# for Apache AGE, need to load the age extension
 Postgrex.query("LOAD 'age';", [])
 q = """
-  SET search_path = ag_catalog, "$user", public;
-  """
+ SET search_path = ag_catalog, "$user", public;
+ """
 Postgrex.query(q, [])
 # network is the offical example database of AgensGraph
 Postgrex.query("set graph_path=network;", [])
@@ -56,4 +56,5 @@ Postgrex.query("MATCH p=(:person {name: 'Tom'})-[:knows]->(:person) RETURN p;", 
 
 ## TODO
 - add ecto support
+- add docs
 
