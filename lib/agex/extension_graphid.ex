@@ -1,7 +1,6 @@
 defmodule Agex.Extension.GraphId do
   @behaviour Postgrex.Extension
   import Postgrex.BinaryUtils, warn: false
-  # alias Agex.Util
   require Logger
 
   @moduledoc """
@@ -22,8 +21,8 @@ defmodule Agex.Extension.GraphId do
 
   def encode(_opts) do
     quote location: :keep do
-      %Agex.Vertex{} = vertex ->
-        data = unquote(__MODULE__).encode_elixir(vertex)
+      %Agex.GraphId{} = graphid ->
+        data = unquote(__MODULE__).encode_elixir(graphid)
         [<<IO.iodata_length(data)::int32>> | data]
       other ->
         raise DBConnection.EncodeError, Postgrex.Utils.encode_msg(other, Agex.GrpahId)
@@ -50,11 +49,10 @@ defmodule Agex.Extension.GraphId do
     str |> IO.iodata_to_binary
   end
 
-  def decode_elixir(data) do
-    # Logger.debug("data: #{inspect(data)}")
+  def decode_elixir(data) when is_bitstring(data) do
     case String.split(data, ".") do
       [lab_id, loc_id] ->
-        %Agex.GraphId{lab_id: lab_id, loc_id: loc_id}
+        %Agex.GraphId{lab_id: String.to_integer(lab_id), loc_id: String.to_integer(loc_id)}
       _ ->
         nil
     end

@@ -1,7 +1,7 @@
 defmodule Agex.GraphId do
   use Bitwise
   defstruct lab_id: 0, loc_id: 0
-  # @type t :: %__MODULE__{lab_id: Integer.t(), lab_id: Integer.t()}
+  @type t :: %__MODULE__{lab_id: Integer.t(), lab_id: Integer.t()}
 
   def as_integer(%Agex.GraphId{lab_id: lab_id, loc_id: loc_id}) do
     (lab_id <<< 48) ||| loc_id
