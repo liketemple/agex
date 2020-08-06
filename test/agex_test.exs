@@ -29,15 +29,52 @@ defmodule AgexTest do
         database: env[:db],
         types: Agex.PostgresTypes
       )
-    # Agent.start_link(fn -> pid end, name: :agens_conn)
 
     query(pid, "LOAD 'age';")
     q = """
     SET search_path = ag_catalog, "$user", public;
     """
-    query(pid, q)
-    set_graph(pid)
     {:ok, conn: pid}
+  end
+
+  test "create graph" do
+    assert query(context[:conn], "CREATE GRAPH network;", []) == :ok
+  end
+
+  test "set graph" do
+    assert query(context[:conn], "SET graph_path = network;", []) == :ok
+  end
+
+  test "create vlabel" do
+    assert query(context[:conn], "CREATE VLABEL person;", []) == :ok
+  end
+
+  test "create elabel" do
+    assert query(context[:conn], "CREATE ELABEL knows;", []) == :ok
+  end
+
+  test "create movie" do
+    assert query(context[:conn], "CREATE (n:movie {title:'Matrix'});", []) == :ok
+  end
+
+  test "create person Tom" do
+    assert query(context[:conn], "CREATE (:person {name: 'Tom'})-[:knows {fromdate:'2011-11-24'}]->(:person {name: 'Summer'});", []) == :ok
+  end
+
+  test "create person Pat" do
+    assert query(context[:conn], "CREATE (:person {name: 'Pat'})-[:knows {fromdate:'2013-12-25'}]->(:person {name: 'Nikki'});", []) == :ok
+  end
+
+  test "create person Olive" do
+    assert query(context[:conn], "CREATE (:person {name: 'Olive'})-[:knows {fromdate:'2015-01-26'}]->(:person {name: 'Todd'});", []) == :ok
+  end
+
+  test "match create", context do
+    q = """
+    MATCH (p:Person {name: 'Tom'}),(k:Person{name: 'Pat'}) 
+    CREATE (p)-[:KNOWS {fromdate:'2017-02-27'} ]->(k);
+    """
+    assert query(context[:conn], q, []) == :ok
   end
 
   test "basic vertex", context do
