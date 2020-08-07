@@ -10,7 +10,7 @@ by adding `agex` to your list of dependencies in `mix.exs`:
 ```elixir
 def deps do
   [
-    {:agex, "~> 0.1.1"}
+    {:agex, "~> 0.1.2"}
   ]
 end
 ```
@@ -64,6 +64,12 @@ Postgrex.query("MATCH (p:movie) return p;", [])
 Postgrex.query("MATCH (:person {name: 'Tom'})-[r:knows]->(:person {name: 'Summer'}) return r;", [])
 Postgrex.query("MATCH p=(:person {name: 'Tom'})-[:knows]->(:person) RETURN p;", [])
 
+```
+
+## Test
+Edit the database config in config/config.exs
+```shell
+mix test --seed 0
 ```
 
 ## TODO
